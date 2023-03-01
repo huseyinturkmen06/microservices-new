@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.programmingtech.orderservice.OrderServiceApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.54 s - in com.programmingtech.orderservice.OrderServiceApplicationTests
