@@ -7,6 +7,7 @@ import com.programmingtech.orderservice.dto.OrderRequest;
 import com.programmingtech.orderservice.model.Order;
 import com.programmingtech.orderservice.model.OrderLineItems;
 import com.programmingtech.orderservice.repository.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,19 +19,15 @@ import java.util.UUID;
 
 @Service
 @Transactional
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 //this is the faster way of constructor injection
 public class OrderService {
 
 
     private final OrderRepository orderRepository;
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
 
-    @Autowired
-    public OrderService(OrderRepository orderRepository, WebClient webClient) {
-        this.orderRepository = orderRepository;
-        this.webClient = webClient;
-    }
+
 
 
 
@@ -55,10 +52,16 @@ public class OrderService {
         // cal inventory service and check if out product is in stock or not
         //here is the beginning of the microservices usage
 
-        //we are making a request to a get method id inventory service
+        //we are making a request to a get method id inventory service  "http://localhost:8082/api/inventory"
         //whic method returns a boolean value
-        InventoryResponse[] inventoryResponseArray= webClient.get()
-                    .uri("http://localhost:8082/api/inventory",
+
+        //we were using this but after setting the spring.application.name=0
+        //int inventory service application, we changed it
+
+
+        //!!get will get the instance of the client
+        InventoryResponse[] inventoryResponseArray= webClientBuilder.build().get()
+                    .uri("http://inventory-service/api/inventory",
                             uriBuilder -> uriBuilder.queryParam("skuCode",skuCodes).build())
                     .retrieve()
                     .bodyToMono(InventoryResponse[].class)
